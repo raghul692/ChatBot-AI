@@ -1,0 +1,8 @@
+{
+  "name": "Aetheris AI",
+  "description": "Next-Generation Multimodal AI Workspace for Research, Data Analysis, Coding, Study, and Document Intelligence.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -23,8 +23,8 @@ function calculateAnalytics(data) {
   console.log("📊 Processing analytics payload...");
   const total = data.reduce((acc, item) => acc + item.value, 0);
   const average = total / data.length;
-  console.log(\`Total Revenue: \$\${total}\`);
-  console.log(\`Average Order: \$\${average.toFixed(2)}\`);
+  console.log("Total Revenue: $" + total);
+  console.log("Average Order: $" + average.toFixed(2));
   return { total, average };
 }
 

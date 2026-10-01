@@ -35,8 +35,8 @@ const FormattedContent: React.FC<{ content: string }> = ({ content }) => {
         }
 
         // List item lines (* or - or 1.)
-        if (/^[\*\-]\s+/.test(trimmed) || /^\d+\.\s+/.test(trimmed)) {
-          const listText = trimmed.replace(/^([\*\-]|^\d+\.)\s+/, '');
+        if (/^[*-]\s+/.test(trimmed) || /^\d+\.\s+/.test(trimmed)) {
+          const listText = trimmed.replace(/^([*-]|^\d+\.)\s+/, '');
           return (
             <div key={idx} className="flex items-start gap-2 ml-1">
               <span className="text-primary-container text-xs mt-1 shrink-0">•</span>

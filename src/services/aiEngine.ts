@@ -1,5 +1,5 @@
 import type { AIMode, LanguageMode, CodeArtifact, DataArtifact, StudyArtifact, Citation } from '../types';
-import { callGeminiApi, getStoredGeminiApiKey } from './geminiApi';
+import { callGeminiApi } from './geminiApi';
 
 export interface FileAttachment {
   id: string;
@@ -39,15 +39,12 @@ export async function generateAIResponse(options: GenerateOptions): Promise<{
     // A. IMAGE ANALYSIS (VISION MODE)
     if (fileType === 'image') {
       const promptText = `Analyze this uploaded image file "${fileName}" (${fileSize}). ${text}`;
-      const apiKey = getStoredGeminiApiKey();
-      if (apiKey) {
-        const apiRes = await callGeminiApi(promptText, apiKey);
-        if (apiRes && apiRes.text) {
-          return {
-            content: `🖼️ **Multimodal Computer Vision Analysis**\n\n**File Details:** ${fileName} (${fileSize})\n\n${apiRes.text}`,
-            confidenceScore: 0.99
-          };
-        }
+      const apiRes = await callGeminiApi(promptText);
+      if (apiRes && apiRes.text) {
+        return {
+          content: `🖼️ **Multimodal Computer Vision Analysis**\n\n**File Details:** ${fileName} (${fileSize})\n\n${apiRes.text}`,
+          confidenceScore: 0.99
+        };
       }
 
       return {
@@ -164,11 +161,9 @@ Click the interactive Code Workspace card below to test and edit this file!`,
     }
   }
 
-  // 1. TRY LIVE GEMINI API IF API KEY IS CONFIGURED
-  const apiKey = getStoredGeminiApiKey();
-  if (apiKey) {
-    const apiResult = await callGeminiApi(text, apiKey);
-    if (apiResult && apiResult.text) {
+  // 1. TRY LIVE GEMINI API VIA SERVER PROXY
+  const apiResult = await callGeminiApi(text);
+  if (apiResult && apiResult.text) {
       let codeArt: CodeArtifact | undefined;
       let dataArt: DataArtifact | undefined;
       let studyArt: StudyArtifact | undefined;
@@ -228,7 +223,6 @@ Click the interactive Code Workspace card below to test and edit this file!`,
         studyArtifact: studyArt
       };
     }
-  }
 
   // 2. DYNAMIC OFFLINE ENGINE - TAILORED DYNAMIC PROMPT DETECTORS
 

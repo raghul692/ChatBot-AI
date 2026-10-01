@@ -60,6 +60,7 @@ export const SettingsSuite: React.FC = () => {
 
   // User Profile State
   const [profile, setProfile] = useState<UserProfileData>(defaultProfile);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -84,9 +85,11 @@ export const SettingsSuite: React.FC = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size exceeds 5MB limit. Please choose a smaller image.');
+        setUploadError('File size exceeds 5MB limit. Please choose a smaller image.');
+        setTimeout(() => setUploadError(null), 4000);
         return;
       }
+      setUploadError(null);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(prev => ({ ...prev, avatarUrl: reader.result as string }));
@@ -231,6 +234,9 @@ export const SettingsSuite: React.FC = () => {
                     Export Data
                   </button>
                 </div>
+                {uploadError && (
+                  <p className="text-xs text-rose-400 font-medium pt-1">{uploadError}</p>
+                )}
               </div>
             </div>
           </div>
@@ -356,35 +362,21 @@ export const SettingsSuite: React.FC = () => {
             <Sparkles className="w-4 h-4" /> AI Model & Synthesis Hyperparameters
           </div>
 
-          {/* Gemini API Key Configuration Section */}
+          {/* Server-Side Gemini AI Integration Section */}
           <div className="p-4 rounded-xl bg-surface-container-low border border-primary-container/30 space-y-3">
             <div className="flex items-center gap-2 text-xs font-bold text-on-surface">
               <Key className="w-4 h-4 text-primary-container" />
-              <span>Google Gemini API Key (Live Chat Stream Integration)</span>
+              <span>Google Gemini AI (Server-Side Proxy Architecture)</span>
             </div>
             <p className="text-[11px] text-muted leading-relaxed">
-              Enter your Gemini API key below to stream real-time answers from Google Gemini 2.5 Flash / 2.0 Flash for any prompt you type.
+              Real-time inference is securely routed through the server proxy using Google GenAI SDK (<span className="text-primary font-mono text-[10px]">gemini-2.5-flash</span>) with automatic fallback to local high-precision offline synthesis.
             </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="password"
-                placeholder="AIzaSy..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-xl bg-surface border border-border text-xs font-mono text-on-surface focus:outline-none focus:border-primary-container"
-              />
-              <button
-                onClick={handleSaveProfile}
-                className="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary-container/90 text-white font-semibold text-xs transition-all shrink-0 cursor-pointer"
-              >
-                Save Key
-              </button>
-            </div>
-            {apiKey && (
-              <span className="text-[10px] text-emerald-400 font-mono block">
-                ✓ Gemini API Key configured and active in localStorage
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface border border-border text-xs">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <span className="text-[11px] text-emerald-400 font-mono">
+                Server-side /api/gemini endpoint active & configured
               </span>
-            )}
+            </div>
           </div>
 
           <div className="space-y-4 pt-2">
